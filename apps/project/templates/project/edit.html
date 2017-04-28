@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <a href="{% url 'projects:appoints' %}">Dashbooard</a>
+        <a href="{% url 'logins:logout' %}">Logout</a>
+<form action="{% url 'projects:update' update_id.id %}" method="post">
+            {%csrf_token%}
+    <fieldset>
+        <legend>Add an Appointment</legend>
+        <input type="hidden" name="user_id" value="{{request.session.user_id}}">
+
+        Tasks: <input type="text" name="tasks" value=""><br>
+        Status: <select name="status">
+          <option value="Done">Done</option>
+          <option value="Missed">Missed</option>
+        </select>
+        Date: <input type="date" name="date" value=""><br>
+        Time: <input type="time" name="time" value=""><br>
+
+        <input type="submit" name="submit" value="Update">
+    </fieldset>
+</form>
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+    </body>
+</html>

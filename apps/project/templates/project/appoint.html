@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <a href="{% url 'logins:logout' %}">Logout</a>
+        <h3>Hello, {{request.session.username}} </h3>
+        <p>Here are your appointments for today, {{ date }}</p>
+            <table>
+                <tr>
+                  <th>Tasks</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+                    {% for x in appoint %}
+                    {% if x.date == date %}
+                <tr>
+                  <td>{{x.tasks}}</td>
+                  <td>{{x.time}}</td>
+                  <td>{{x.status}}</td>
+                  <td><a href="{% url 'projects:edit' x.id %}">Edit</a> <a href="{% url 'projects:delete' x.id %}">Delete</a></td>
+                </tr>
+                {%endif%}
+                {% endfor %}
+            </table>
+
+
+        <p>Your Other appointments:</p>
+
+        <table>
+        	<tr>
+        		<th>Tasks</th><br>
+        		<th>Date</th>
+        		<th>Time</th>
+        	</tr>
+        	 {% for x in appoint %}
+        	 	{% if x.date > date %}
+        	<tr>
+        		<td>{{ x.tasks }}</td>
+        		<td>{{ x.date}}</td>
+        		<td>{{ x.time}}</td>
+        	</tr>
+        		{%endif%}
+        {% endfor %}
+        </table>
+
+        <h4>Add Appointments</h4>
+
+        <form action="{% url 'projects:process' %}" method="post">
+                {%csrf_token%}
+            <fieldset>
+        <legend>Add an Appointment</legend>
+        <input type="hidden" name="user_id" value="{{request.session.user_id}}">
+
+        Date: <input type="date" name="date" value=""><br>
+        Time: <input type="time" name="time" value=""><br>
+        Tasks: <input type="text" name="tasks" value=""><br>
+        <input type="hidden" name="status" value="pending"><br>
+
+
+        <input type="submit" name="submit" value="Add">
+    </fieldset>
+    {% for message in messages %}
+	<p>{{ message }}</p>
+	{% endfor %}
+</form>
+
+
+
+    </body>
+</html>
